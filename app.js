@@ -1,21 +1,56 @@
-const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-const expressSession = require("express-session");
+//********REQUIREMENTS**********
+const fs = require("fs");
+const session = require("express-session");
 const express = require("express");
 const expressValidator = require("express-validator");
+const mustacheExpress = require('mustache-express');
+const bodyParser = require('body-parser');
+const wordGenerator = require('./word-generator');
+
+
+const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 
 const app = express();
 
+//Connecting mustache-express to the app engine and linking it to the views folder
+app.engine('mustache', mustacheExpress());
+app.set('views', './views');
+app.set('view engine', 'mustache');
+
+//Tells app to use the body-parser module for json files
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+//'extended: false' parses strings and arrays.
+//'extended: true' parses nested objects
+
+//Tells app to utilize express-validator
 app.use(expressValidator());
 
-
-
-
-express-session --- downloadable module
-
+//Setting up the session data
 app.use(session({
+  secret: 'butter churner',
+  resave: false,
+  saveUninitialized: true
+}));
 
 
-}))
+
+app.get('/', function(req, res){
+
+  var randomWord = wordGenerator.find(words)
+  res.send(randomWord);
+  console.log(randomWord);
+})
+
+
+
+
+
+
+//listens for the app and the port 3000
+app.listen(3000, function () {
+  console.log('Successfully started express application!');
+});
 
 
 // 1. write a function that randomly selects a word from the database everytime a new 'session' is started
