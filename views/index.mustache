@@ -4,14 +4,32 @@
     <meta charset="utf-8">
     <title>Mystery Game</title>
   </head>
+
   <body>
 
-    <form class="" action="/" method="post">
+    <h1>Hangman Extraordinaire</h1>
 
+    <p>{{randomWordArray}}</p>
+    <p>{{guessArray}}</p>
+
+    <form class="" action="/" method="post">
       <input type="text" name="letter" placeholder="Choose a Letter">
       <input type="submit">
 
     </form>
+
+    <div class="">
+      <ul>
+
+      {{#guesses}}
+        {{#.}}
+          <li>{{.}}</li>
+        {{/.}}
+      {{/guesses}}
+
+      </ul>
+    </div>
+
 
   </body>
 </html>
