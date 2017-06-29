@@ -39,10 +39,11 @@ const solvedmessage = "YOU WIN!"
 let guess;
 let guessArray = [];
 
-var wrongguess = 0
-var correct = false
+var guessesLeft = 8;
+var correct = false;
 
-var filteredWords = words.filter(function(word) {return word.length <= 5; });
+var filteredWords = words.filter(function(word) {
+  return word.length > 4 && word.length < 6; });
 var randomizeWord = filteredWords[Math.floor(Math.random() * filteredWords.length)];
 var randomWordArray = randomizeWord.split('');
 var arrayLength = randomWordArray.length;
@@ -53,6 +54,7 @@ console.log(randomWordArray);
 
 for (var i = 0; i < randomizeWord.length; i++) {
   guessArray.push("_");
+  // guessArray.join("");
 }
 
 //COMPARES GUESS TO EACH LETTER IN THE randomWordArray AND IF CORRECT REPLACES IT IN THE EMPTY ARRAY
@@ -63,27 +65,41 @@ function compareGuess (req, res) {
       console.log(guessArray);
     }
   }
+  if (randomizeWord.indexOf(guess) === -1) {
+    guessesLeft--;
+  }
 
+  for (let i = 0; i < guesses.length; i++) {
+    if (guess === guesses[i]) {
+      //Don't push guess?
+    }
+  }
   return guessArray;
-  guesses.push(guess);
 }
 console.log(guessArray);
 console.log(guesses);
 
-//BEGIN GETS AND POSTS
+//BEGIN GETS AND POSTS*****************************************
 
 app.get('/', function(req, res){
-    res.render('index', {randomWordArray: randomWordArray, guessArray: guessArray, guesses: guesses})
+    res.render('index', {
+    randomWordArray: randomWordArray,
+    guessArray: guessArray,
+    guesses: guesses,
+    guessesLeft: guessesLeft})
 });
 
 app.post('/', function(req, res) {
-
+    // req.checkBody("letter", "You must enter a letter!").notEmpty();
+    // var errors = req.validationErrors();
     //SETS THE VALUE OF THE TEXT FIELD TO GUESS FOR COMPARE GUESS FUNCTION ABOVE
     var correctedGuess = req.body.letter.toLowerCase();
     guess = correctedGuess
-    compareGuess(guess)
+
+    compareGuess(guess);
     guesses.push(guess);
-    res.render('index', {randomWordArray: randomWordArray, guessArray: guessArray, guesses: guesses})
+
+    res.render('index', {randomWordArray: randomWordArray, guessArray: guessArray, guesses: guesses, guessesLeft: guessesLeft})
     console.log(guesses)
 
 })
