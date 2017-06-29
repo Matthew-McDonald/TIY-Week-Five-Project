@@ -2,8 +2,15 @@
 *, *:before, *after {
   box-sizing: border-box;
 }
+h1 {
+  font-size: 20pt;
+}
 
 body {
   text-align: center;
-  background-color: blue;
+  font-size: 24pt;
+}
+
+#guessArrayStyles {
+  font-size: 24pt;
 }

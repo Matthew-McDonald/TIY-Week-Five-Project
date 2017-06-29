@@ -35,8 +35,6 @@ app.use(session({
 }));
 
 //BEGIN VARIABLES *****************************************
-// searchBar.focus();
-
 
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 const arr = [];
@@ -60,8 +58,7 @@ console.log(randomWordArray);
 //MAKE GUESSARRAY FILL WITH _ FOR THE LENGTH OF THE RANDOM WORD
 
 for (var i = 0; i < randomizeWord.length; i++) {
-
-  guessArray.push("_");
+  guessArray.push("_")
 
 }
 
@@ -102,6 +99,8 @@ console.log(guesses);
 
 app.get('/', function(req, res){
 
+
+
     res.render('index', {
     randomWordArray: randomWordArray,
     guessArray: guessArray,
@@ -111,6 +110,8 @@ app.get('/', function(req, res){
 
 app.post('/', function(req, res) {
     //SETS THE VALUE OF THE TEXT FIELD TO GUESS FOR COMPARE GUESS FUNCTION ABOVE
+
+
     var correctedGuess = req.body.letter.toLowerCase();
     guess = correctedGuess
 
