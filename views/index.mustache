@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Mystery Game</title>
+    <link rel="stylesheet" href="../public/styles.css">
   </head>
 
   <body>
@@ -14,7 +15,7 @@
     <p>Guesses Left: {{guessesLeft}}</p>
 
     <form class="" action="/" method="post">
-      <input type="text" name="letter" placeholder="Choose a Letter">
+      <input id = "searchBar" type="text" name="letter" placeholder="Choose a Letter" maxlength="1" autofocus="autofocus">
       <input type="submit">
 
     </form>

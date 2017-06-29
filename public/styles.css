@@ -1,0 +1,9 @@
+/* NORMALIZATION */
+*, *:before, *after {
+  box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  background-color: blue;
+}

@@ -5,7 +5,9 @@ const express = require("express");
 const expressValidator = require("express-validator");
 const mustacheExpress = require('mustache-express');
 const bodyParser = require('body-parser');
+// const serve = require('express-static')
 // const wordGenerator = require('./word-generator');
+
 
 
 const app = express();
@@ -24,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Tells app to utilize express-validator ************
 app.use(expressValidator());
 
+app.use(express.static('public'));
 //Setting up the session data ***************************************
 app.use(session({
   secret: 'butter churner',
@@ -32,12 +35,16 @@ app.use(session({
 }));
 
 //BEGIN VARIABLES *****************************************
+// searchBar.focus();
+
+
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 const arr = [];
 const guesses = [];
 const solvedmessage = "YOU WIN!"
 let guess;
 let guessArray = [];
+let alreadyGuess = false;
 
 var guessesLeft = 8;
 var correct = false;
@@ -53,35 +60,48 @@ console.log(randomWordArray);
 //MAKE GUESSARRAY FILL WITH _ FOR THE LENGTH OF THE RANDOM WORD
 
 for (var i = 0; i < randomizeWord.length; i++) {
+
   guessArray.push("_");
-  // guessArray.join("");
+
 }
 
 //COMPARES GUESS TO EACH LETTER IN THE randomWordArray AND IF CORRECT REPLACES IT IN THE EMPTY ARRAY
 function compareGuess (req, res) {
+
   for(i=0; i < randomizeWord.length; i++){
     if (guess === randomizeWord[i]){
       guessArray[i] = guess
       console.log(guessArray);
     }
   }
-  if (randomizeWord.indexOf(guess) === -1) {
+  for (let i = 0; i < guesses.length; i++) {
+    if (guess === guesses[i]) {
+      alreadyGuess = true;
+    }
+  }
+
+  if (alreadyGuess === false && randomizeWord.indexOf(guess) === -1){
+    guesses.push(guess);
     guessesLeft--;
   }
 
-  for (let i = 0; i < guesses.length; i++) {
-    if (guess === guesses[i]) {
-      //Don't push guess?
-    }
-  }
   return guessArray;
 }
+
+function checkWin(guessesLeft) {
+  if (guessesLeft === 0) {
+    res.redirect('lose');
+
+  }
+}
+
 console.log(guessArray);
 console.log(guesses);
 
 //BEGIN GETS AND POSTS*****************************************
 
 app.get('/', function(req, res){
+
     res.render('index', {
     randomWordArray: randomWordArray,
     guessArray: guessArray,
@@ -90,22 +110,42 @@ app.get('/', function(req, res){
 });
 
 app.post('/', function(req, res) {
-    // req.checkBody("letter", "You must enter a letter!").notEmpty();
-    // var errors = req.validationErrors();
     //SETS THE VALUE OF THE TEXT FIELD TO GUESS FOR COMPARE GUESS FUNCTION ABOVE
     var correctedGuess = req.body.letter.toLowerCase();
     guess = correctedGuess
 
-    compareGuess(guess);
-    guesses.push(guess);
 
-    res.render('index', {randomWordArray: randomWordArray, guessArray: guessArray, guesses: guesses, guessesLeft: guessesLeft})
+    compareGuess(guess);
+
+    if (guessesLeft === 0) {
+      res.redirect('lose');
+      }
+
+    let finalWord = randomWordArray.join(",");
+    let finalGuessWord = guessArray.join(",");
+      if (finalWord === finalGuessWord) {
+        res.redirect('win');}
+
+    res.render('index', {
+      randomWordArray: randomWordArray,
+      guessArray: guessArray,
+      guesses: guesses,
+      guessesLeft: guessesLeft})
+
     console.log(guesses)
 
 })
 
+app.get('/lose', function(req, res) {
+  res.render("lose");
+})
+
+app.get('/win', function(req, res) {
+  res.render("win");
+})
+
 //listens for the app and the port 3000
-app.listen(3000, function () {
+app.listen(2000, function () {
   console.log('Successfully started express application!');
 });
 
