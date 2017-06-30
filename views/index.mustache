@@ -9,27 +9,26 @@
   <body>
 
     <h1>Hangman Extraordinaire</h1>
+    <hr>
 
-    <p>{{randomWordArray}}</p>
+
     <p id = "guessArrayStyles">{{guessArray}}</p>
     <p>Guesses Left: {{guessesLeft}}</p>
 
     <form class="" action="/" method="post">
-      <input id = "searchBar" type="text" name="letter" placeholder="Choose a Letter" maxlength="1" autofocus="autofocus">
-      <input type="submit">
+      <input id = "searchBar" type="text" name="letter" placeholder="Choose a Letter" maxlength="1" autofocus="autofocus" autocomplete="off">
+      <input id="submitButton" type="submit" value="Submit Guess">
 
     </form>
 
-    <div class="">
-      <ul>
+    <div class="guesslist">
 
       {{#guesses}}
         {{#.}}
-          <li>{{.}}</li>
+          <span>{{.}}</span>
         {{/.}}
       {{/guesses}}
 
-      </ul>
     </div>
 
 

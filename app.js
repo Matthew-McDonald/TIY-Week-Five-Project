@@ -5,10 +5,7 @@ const express = require("express");
 const expressValidator = require("express-validator");
 const mustacheExpress = require('mustache-express');
 const bodyParser = require('body-parser');
-// const serve = require('express-static')
 // const wordGenerator = require('./word-generator');
-
-
 
 const app = express();
 
@@ -26,8 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Tells app to utilize express-validator ************
 app.use(expressValidator());
 
+//To connect the style sheet***************************
 app.use(express.static('public'));
-//Setting up the session data ***************************************
+
+//Setting up the session data ************************************
 app.use(session({
   secret: 'butter churner',
   resave: false,
@@ -37,22 +36,20 @@ app.use(session({
 //BEGIN VARIABLES *****************************************
 
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-const arr = [];
 const guesses = [];
-const solvedmessage = "YOU WIN!"
 let guess;
 let guessArray = [];
 let alreadyGuess = false;
-
 var guessesLeft = 8;
-var correct = false;
 
+//RANDOM WORD VARIABLES *************************************
 var filteredWords = words.filter(function(word) {
   return word.length > 4 && word.length < 6; });
+
 var randomizeWord = filteredWords[Math.floor(Math.random() * filteredWords.length)];
 var randomWordArray = randomizeWord.split('');
 var arrayLength = randomWordArray.length;
-
+//
 console.log(randomWordArray);
 
 //MAKE GUESSARRAY FILL WITH _ FOR THE LENGTH OF THE RANDOM WORD
@@ -61,7 +58,6 @@ for (var i = 0; i < randomizeWord.length; i++) {
   guessArray.push("_")
 
 }
-
 //COMPARES GUESS TO EACH LETTER IN THE randomWordArray AND IF CORRECT REPLACES IT IN THE EMPTY ARRAY
 function compareGuess (req, res) {
 
@@ -81,15 +77,7 @@ function compareGuess (req, res) {
     guesses.push(guess);
     guessesLeft--;
   }
-
   return guessArray;
-}
-
-function checkWin(guessesLeft) {
-  if (guessesLeft === 0) {
-    res.redirect('lose');
-
-  }
 }
 
 console.log(guessArray);
@@ -98,8 +86,6 @@ console.log(guesses);
 //BEGIN GETS AND POSTS*****************************************
 
 app.get('/', function(req, res){
-
-
 
     res.render('index', {
     randomWordArray: randomWordArray,
@@ -111,17 +97,17 @@ app.get('/', function(req, res){
 app.post('/', function(req, res) {
     //SETS THE VALUE OF THE TEXT FIELD TO GUESS FOR COMPARE GUESS FUNCTION ABOVE
 
-
     var correctedGuess = req.body.letter.toLowerCase();
     guess = correctedGuess
 
-
     compareGuess(guess);
 
+// CHECKS IF YOU LOSE THE GAME ********************
     if (guessesLeft === 0) {
       res.redirect('lose');
       }
 
+//CHECKS IF YOU WIN THE GAME*****************
     let finalWord = randomWordArray.join(",");
     let finalGuessWord = guessArray.join(",");
       if (finalWord === finalGuessWord) {
@@ -134,13 +120,13 @@ app.post('/', function(req, res) {
       guessesLeft: guessesLeft})
 
     console.log(guesses)
-
 })
 
+//LOSE REDIRECT PAGE **************************
 app.get('/lose', function(req, res) {
-  res.render("lose");
+  res.render("lose", {randomizeWord: randomizeWord});
 })
-
+//WIN REDIRECT PAGE **************************
 app.get('/win', function(req, res) {
   res.render("win");
 })
@@ -153,7 +139,7 @@ app.listen(2000, function () {
 
 // 1. write a function that randomly selects a word from the database everytime a new 'session' is started
 //2. Use a form to accept 'letter' submissions
-//3. Use expressValidator to make sure no more than 1 letter is entered
+//3. Use expressValidator to make sure no more Hthan 1 letter is entered
 //4. function that parses through the selected random word a letter at a time and checks to see if the inputed letter matches a letter in the word
 //5. create a function that tracks the number of guesses submitted, if more than 8, the user loses and a display is prompted that they lose
 //6. if the guess is wrong, store the guess in an array(or text area) and remove one guess from the total allowed

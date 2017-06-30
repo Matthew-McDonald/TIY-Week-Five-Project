@@ -3,14 +3,48 @@
   box-sizing: border-box;
 }
 h1 {
-  font-size: 20pt;
+  font-size: 24pt;
+}
+hr {
+  width: 50vw;
 }
 
 body {
   text-align: center;
   font-size: 24pt;
+  font-family: fantasy;
 }
 
 #guessArrayStyles {
   font-size: 24pt;
+}
+
+#searchBar {
+  outline: none;
+  /*width: 10vw;*/
+  height:2vw;
+  border-radius: 10px;
+  border: 1px solid grey;
+  font-size: 14pt;
+  font-family: fantasy;
+  text-align: center;
+  background-color: #C0C0C0;
+  color: black;
+  padding-top: 5px;
+}
+::-webkit-input-placeholder {
+    color: black;
+}
+
+#submitButton {
+  font-family: fantasy;
+  border: 1px solid grey;
+  border-radius: 10px;
+  font-size: 14pt;
+  padding-top: 5px;
+}
+
+.guesslist {
+  color: red;
+  text-transform: uppercase;
 }
